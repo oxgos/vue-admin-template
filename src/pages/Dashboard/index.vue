@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent, reactive, ref, toRaw } from "vue";
-import Menus from "@/components/Menus/index.vue";
+import Menus from "./components/Menus/index.vue";
+import VHeader from "./components/Header/index.vue";
 export default defineComponent({
   setup() {
     const accountTips = ref([
@@ -28,6 +29,7 @@ export default defineComponent({
   },
   components: {
     Menus,
+    VHeader,
   },
 });
 </script>
@@ -39,7 +41,9 @@ export default defineComponent({
         <Menus />
       </a-layout-sider>
       <a-layout>
-        <a-layout-header>Header</a-layout-header>
+        <a-layout-header>
+          <v-header />
+        </a-layout-header>
         <a-layout-content>Content</a-layout-content>
       </a-layout>
     </a-layout>
@@ -52,12 +56,10 @@ export default defineComponent({
   height: 100%;
   .ant-layout {
     height: 100%;
-  }
-  .ant-layout-sider {
-    flex: none !important;
-    width: unset !important;
-    max-width: unset !important;
-    min-width: unset !important;
+    .ant-layout-header {
+      padding: 0 20px;
+      background-color: #fff;
+    }
   }
 }
 </style>
