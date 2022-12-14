@@ -104,7 +104,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .login-page {
   position: relative;
   width: 100vw;

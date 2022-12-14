@@ -12,25 +12,25 @@
       :theme="theme || 'dark'"
       @click="handleClickMenu"
     >
-      <a-menu-item key="首页">
+      <a-menu-item key="dashboard">
         <template #icon>
           <HomeOutlined />
         </template>
         首页
       </a-menu-item>
-      <a-menu-item key="引导页">
+      <a-menu-item key="guide">
         <template #icon>
           <KeyOutlined />
         </template>
         引导页
       </a-menu-item>
-      <a-menu-item key="表格">
+      <a-menu-item key="vTable">
         <template #icon>
           <TableOutlined />
         </template>
         表格
       </a-menu-item>
-      <a-sub-menu key="路由嵌套">
+      <a-sub-menu key="routerNest">
         <template #icon>
           <ClusterOutlined />
         </template>
@@ -42,7 +42,7 @@
           </a-sub-menu>
         </a-sub-menu>
       </a-sub-menu>
-      <a-sub-menu key="组件">
+      <a-sub-menu key="vComponent">
         <template #icon>
           <AppstoreOutlined />
         </template>
@@ -54,6 +54,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, reactive, toRefs, toRaw } from "vue";
+import { useRouter } from "vue-router";
 import { useMenusStore } from "@/store/menus";
 import {
   MailOutlined,
@@ -65,6 +66,7 @@ import {
   ClusterOutlined,
   TableOutlined,
 } from "@ant-design/icons-vue";
+import { menuMapping } from "./menuMapping";
 
 interface MenusProps {
   theme?: string;
@@ -75,6 +77,7 @@ interface MenusProps {
 export default defineComponent({
   props: ["theme", "selectedKeys", "openKeys"],
   setup(props: MenusProps) {
+    const router = useRouter();
     const state = reactive({
       selectedKeys: props.selectedKeys || ["首页"],
       openKeys: props.openKeys || [],
@@ -82,7 +85,14 @@ export default defineComponent({
     const menusStore = useMenusStore();
 
     const handleClickMenu = ({ keyPath }: { keyPath: string[] }) => {
+      const paths = [];
+      const selectedKeys = [];
+      for (const key of keyPath) {
+        paths.push(menuMapping[key].path);
+        selectedKeys.push(menuMapping[key].pageName);
+      }
       menusStore.changeSelectKeys(toRaw(keyPath));
+      router.push(paths[paths.length - 1]);
     };
 
     return {
@@ -104,7 +114,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .menu-header {
   padding-left: 24px;
   display: flex;
