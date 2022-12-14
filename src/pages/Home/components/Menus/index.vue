@@ -24,11 +24,11 @@
         </template>
         引导页
       </a-menu-item>
-      <a-menu-item key="vTable">
+      <a-menu-item key="roleTable">
         <template #icon>
           <TableOutlined />
         </template>
-        表格
+        用户表格
       </a-menu-item>
       <a-sub-menu key="routerNest">
         <template #icon>

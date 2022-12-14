@@ -1,17 +1,16 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Login from "@/pages/Login/index.vue";
 import Home from "@/pages/Home/index.vue";
+import { useLoginStore } from "@/store/user";
 
 const Dashboard = () => import("@/pages/Dashboard/index.vue");
 const Guide = () => import("@/pages/Guide/index.vue");
-const VTable = () => import("@/pages/VTable/index.vue");
+const RoleTable = () => import("@/pages/RoleTable/index.vue");
 const VComponents = () => import("@/pages/VComponents/index.vue");
 const DragList = () => import("@/pages/VComponents/DragList/index.vue");
 const RouterNest = () => import("@/pages/RouterNest/index.vue");
 const RouterOneOne = () => import("@/pages/RouterNest/router1-1.vue");
 const RouterOneTwoOne = () => import("@/pages/RouterNest/router1-2-1.vue");
-
-console.log(RouterOneOne);
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,9 +38,9 @@ const router = createRouter({
           component: Guide,
         },
         {
-          path: "/v-table",
-          name: "vTable",
-          component: VTable,
+          path: "/role-table",
+          name: "RoleTable",
+          component: RoleTable,
         },
         {
           path: "v-components",
@@ -80,6 +79,18 @@ const router = createRouter({
       component: Login,
     },
   ],
+});
+
+router.beforeEach((to, from) => {
+  const store = useLoginStore();
+  if (
+    // 检查用户是否已登录
+    !store.isLogin() &&
+    to.name !== "login"
+  ) {
+    // 将用户重定向到登录页面
+    return { name: "login" };
+  }
 });
 
 export default router;

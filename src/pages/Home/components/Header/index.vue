@@ -12,7 +12,7 @@
     <div class="header-right">
       <a-popover placement="bottomRight" trigger="click">
         <template #content>
-          <p>注销</p>
+          <p @click="handleLogout" style="cursor: pointer">注销</p>
         </template>
         <a-avatar size="large">
           <template #icon><UserOutlined /></template>
@@ -26,19 +26,31 @@
 import { defineComponent, reactive, ref, toRaw } from "vue";
 import { UserOutlined } from "@ant-design/icons-vue";
 import { useMenusStore } from "@/store/menus";
+import { useLoginStore } from "@/store/user";
+import { message } from "ant-design-vue";
+import { RES_OK } from "@/utils/request";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   setup() {
-    const formState = reactive({
-      account: null,
-      password: "",
-    });
-
+    const router = useRouter();
+    const store = useLoginStore();
     const menusStore = useMenusStore();
 
+    const handleLogout = async () => {
+      try {
+        const resp = await store.logout();
+        if (resp.code === RES_OK) {
+          router.push("/login");
+        }
+      } catch (e: any) {
+        message.error(e.message);
+      }
+    };
+
     return {
-      formState,
       menusStore,
+      handleLogout,
     };
   },
   components: {

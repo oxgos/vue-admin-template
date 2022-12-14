@@ -14,9 +14,9 @@ export const menuMapping: MenuMapping = {
     pageName: "引导页",
     path: "/guide",
   },
-  vTable: {
-    pageName: "表格",
-    path: "/v-table",
+  roleTable: {
+    pageName: "用户表格",
+    path: "/role-table",
   },
   routerNest: {
     pageName: "路由嵌套",

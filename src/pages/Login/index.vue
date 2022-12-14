@@ -29,13 +29,11 @@
         <a-form-item>
           <div
             class="tips-list"
-            v-for="tips in accountTips"
-            :key="tips.account"
+            v-for="username in ['admin', 'editor', 'guest']"
+            :key="username"
           >
-            <span>账号: {{ tips.account }}</span>
-            <span
-              >密码: {{ tips.password === "" ? "随便填" : tips.password }}</span
-            >
+            <span>账号: {{ username }}</span>
+            <span>密码: 随便填</span>
           </div>
         </a-form-item>
       </a-form>
@@ -48,52 +46,41 @@ import { defineComponent, reactive, ref, toRaw } from "vue";
 import { useRouter } from "vue-router";
 import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
+import request, { RES_OK } from "@/utils/request";
+import { useLoginStore } from "@/store/user";
 
 export default defineComponent({
   setup() {
     const router = useRouter();
-    const accountTips = ref([
-      {
-        account: "admin",
-        password: "",
-      },
-      {
-        account: "editor",
-        password: "123456",
-      },
-      {
-        account: "guest",
-        password: "",
-      },
-    ]);
+    const store = useLoginStore();
     const formState = reactive({
       account: "",
       password: "",
     });
 
-    const errorMessage = () => {
+    const errorMessage = (msg: string) => {
       message.destroy();
-      message.error("用户名或密码错误");
+      message.error(msg);
     };
 
-    const onSubmit = () => {
-      const { account, password } = toRaw(formState);
-      const matchAccount = accountTips.value.find(
-        (item) => item.account === account
-      );
-      if (
-        !matchAccount ||
-        (matchAccount.password != "" && matchAccount.password != password)
-      ) {
-        errorMessage();
-        return;
+    const onSubmit = async () => {
+      try {
+        const { account } = toRaw(formState);
+        const resp = await store.login(account);
+        if (resp.code === RES_OK) {
+          router.push("/dashboard");
+        } else {
+          if (resp.message) {
+            errorMessage(resp.message);
+          }
+        }
+      } catch (e: any) {
+        errorMessage(e.message);
       }
-      router.push("/dashboard");
     };
 
     return {
       formState,
-      accountTips,
       onSubmit,
     };
   },
