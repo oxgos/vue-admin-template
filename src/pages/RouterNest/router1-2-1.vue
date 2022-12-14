@@ -1,5 +1,5 @@
 <template>
-  <main class="dashboard">Router1-1</main>
+  <main class="dashboard">Router1-2-1</main>
 </template>
 
 <script lang="ts">

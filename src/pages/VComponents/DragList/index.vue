@@ -1,5 +1,5 @@
 <template>
-  <main class="dashboard">Router1-1</main>
+  <main class="drag-list">drag-list</main>
 </template>
 
 <script lang="ts">

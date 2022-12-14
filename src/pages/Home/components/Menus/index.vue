@@ -35,19 +35,19 @@
           <ClusterOutlined />
         </template>
         <template #title>路由嵌套</template>
-        <a-sub-menu key="菜单1" title="菜单1">
-          <a-menu-item key="菜单1-1">菜单1-1</a-menu-item>
-          <a-sub-menu key="菜单1-2" title="菜单1-2">
-            <a-menu-item key="菜单1-2-1">菜单1-2-1</a-menu-item>
+        <a-sub-menu key="routerNestOne" title="菜单1">
+          <a-menu-item key="routerNestOneOne">菜单1-1</a-menu-item>
+          <a-sub-menu key="routerNestOneTwo" title="菜单1-2">
+            <a-menu-item key="routerNestOneTwoOne">菜单1-2-1</a-menu-item>
           </a-sub-menu>
         </a-sub-menu>
       </a-sub-menu>
-      <a-sub-menu key="vComponent">
+      <a-sub-menu key="vComponents">
         <template #icon>
           <AppstoreOutlined />
         </template>
         <template #title>组件</template>
-        <a-menu-item key="拖拽列表">拖拽列表</a-menu-item>
+        <a-menu-item key="dragList">拖拽列表</a-menu-item>
       </a-sub-menu>
     </a-menu>
   </div>
@@ -91,7 +91,7 @@ export default defineComponent({
         paths.push(menuMapping[key].path);
         selectedKeys.push(menuMapping[key].pageName);
       }
-      menusStore.changeSelectKeys(toRaw(keyPath));
+      menusStore.changeSelectKeys(selectedKeys);
       router.push(paths[paths.length - 1]);
     };
 

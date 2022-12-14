@@ -1,5 +1,5 @@
 <template>
-  <main class="dashboard">Router1-1</main>
+  <main class="v-table">v-table</main>
 </template>
 
 <script lang="ts">
