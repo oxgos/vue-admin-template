@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, toRaw } from "vue";
+import { defineComponent } from "vue";
 import TypingCard from "@/components/TypingCard/index.vue";
 import Driver from "driver.js";
 import "driver.js/dist/driver.min.css";

@@ -4,58 +4,43 @@
       <img alt="Vue logo" class="logo" src="@/assets/logo.svg" />
       {{ userStore.userInfo?.name }}
     </div>
-    <a-menu
-      style="width: 200px"
-      v-model:openKeys="openKeys"
-      v-model:selectedKeys="selectedKeys"
-      mode="inline"
-      :theme="theme || 'dark'"
-      @click="handleClickMenu"
+    <draggable
+      :list="list"
+      item-key="key"
+      class="list-group"
+      ghost-class="ghost"
+      @start="dragging = true"
+      @end="dragging = false"
     >
-      <a-menu-item key="dashboard">
-        <template #icon>
-          <HomeOutlined />
-        </template>
-        首页
-      </a-menu-item>
-      <a-menu-item key="guide">
-        <template #icon>
-          <KeyOutlined />
-        </template>
-        引导页
-      </a-menu-item>
-      <a-menu-item key="roleTable">
-        <template #icon>
-          <TableOutlined />
-        </template>
-        用户表格
-      </a-menu-item>
-      <a-sub-menu key="routerNest">
-        <template #icon>
-          <ClusterOutlined />
-        </template>
-        <template #title>路由嵌套</template>
-        <a-sub-menu key="routerNestOne" title="菜单1">
-          <a-menu-item key="routerNestOneOne">菜单1-1</a-menu-item>
-          <a-sub-menu key="routerNestOneTwo" title="菜单1-2">
-            <a-menu-item key="routerNestOneTwoOne">菜单1-2-1</a-menu-item>
-          </a-sub-menu>
-        </a-sub-menu>
-      </a-sub-menu>
-      <a-sub-menu key="vComponents">
-        <template #icon>
-          <AppstoreOutlined />
-        </template>
-        <template #title>组件</template>
-        <a-menu-item key="dragList">拖拽列表</a-menu-item>
-      </a-sub-menu>
-    </a-menu>
+      <template #item="{ element }">
+        <a-menu
+          style="width: 200px"
+          v-model:openKeys="openKeys"
+          v-model:selectedKeys="selectedKeys"
+          mode="inline"
+          :theme="theme || 'dark'"
+          @click="handleClickMenu"
+        >
+          <template v-if="!element.children">
+            <a-menu-item :key="element.key">
+              <template #icon v-if="element.icon">
+                <component :is="element.icon" />
+              </template>
+              {{ element.title }}
+            </a-menu-item>
+          </template>
+          <template v-else>
+            <sub-menu :menu-info="element" :key="element.key" />
+          </template>
+        </a-menu>
+      </template>
+    </draggable>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from "vue";
+import { defineComponent, reactive, ref, toRefs } from "vue";
 import { useRouter } from "vue-router";
-import { useMenusStore } from "@/store/menus";
+import draggable from "vuedraggable";
 import {
   MailOutlined,
   CalendarOutlined,
@@ -66,8 +51,10 @@ import {
   ClusterOutlined,
   TableOutlined,
 } from "@ant-design/icons-vue";
-import { menuMapping } from "./menuMapping";
+import { useMenusStore } from "@/store/menus";
 import { useLoginStore } from "@/store/user";
+import { menuMapping } from "./menuMapping";
+import SubMenu from "./SubMenu.vue";
 
 interface MenusProps {
   theme?: string;
@@ -82,6 +69,62 @@ export default defineComponent({
     const userStore = useLoginStore();
     const menusStore = useMenusStore();
 
+    const list = ref([
+      {
+        key: "dashboard",
+        title: "首页",
+        icon: "HomeOutlined",
+      },
+      {
+        key: "guide",
+        title: "引导页",
+        icon: "KeyOutlined",
+      },
+      {
+        key: "roleTable",
+        title: "用户表格",
+        icon: "TableOutlined",
+      },
+      {
+        key: "routerNest",
+        title: "路由嵌套",
+        icon: "KeyOutlined",
+        children: [
+          {
+            key: "routerNestOne",
+            title: "菜单1",
+            children: [
+              {
+                key: "routerNestOneOne",
+                title: "菜单1-1",
+              },
+              {
+                key: "routerNestOneTwo",
+                title: "菜单1-2",
+                children: [
+                  {
+                    key: "routerNestOneTwoOne",
+                    title: "菜单1-2-1",
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        key: "vComponents",
+        title: "组件",
+        icon: "AppstoreOutlined",
+        children: [
+          {
+            key: "dragList",
+            title: "拖拽列表",
+          },
+        ],
+      },
+    ]);
+    const dragging = ref(false);
     const state = reactive({
       selectedKeys: props.selectedKeys || ["首页"],
       openKeys: props.openKeys || [],
@@ -99,6 +142,8 @@ export default defineComponent({
     };
 
     return {
+      dragging,
+      list,
       userStore,
       ...toRefs(props),
       ...toRefs(state),
@@ -114,6 +159,8 @@ export default defineComponent({
     KeyOutlined,
     ClusterOutlined,
     TableOutlined,
+    SubMenu,
+    draggable,
   },
 });
 </script>
