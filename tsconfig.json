@@ -8,6 +8,7 @@
     "src/*.ts",
     "src/*.d.ts"
   ],
+  "exclude": ["node_modules", "dist", "**/*.js"],
   "compilerOptions": {
     "baseUrl": ".",
     "target": "es5",

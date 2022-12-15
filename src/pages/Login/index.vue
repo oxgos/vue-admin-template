@@ -7,7 +7,7 @@
           <a-input
             v-model:value="formState.account"
             placeholder="请输入用户名"
-            maxlength="64"
+            :maxlength="64"
           >
             <template #prefix
               ><UserOutlined style="color: rgba(0, 0, 0, 0.25)"
@@ -19,7 +19,7 @@
             v-model:value="formState.password"
             type="password"
             placeholder="请输入用户密码"
-            maxlength="64"
+            :maxlength="64"
           >
             <template #prefix
               ><LockOutlined style="color: rgba(0, 0, 0, 0.25)"

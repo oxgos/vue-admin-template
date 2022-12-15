@@ -18,7 +18,7 @@
         <a-input v-model:value="formState.id" disabled />
       </a-form-item>
       <a-form-item ref="name" label="用户名称" name="name">
-        <a-input v-model:value="formState.name" maxLength="64" />
+        <a-input v-model:value="formState.name" :maxLength="64" />
       </a-form-item>
       <a-form-item ref="role" label="角色名称" name="role">
         <a-select v-model:value="formState.role" placeholder="请选择角色">
