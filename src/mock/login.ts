@@ -42,26 +42,37 @@ const users: Users = {
   },
 };
 
+const defaultEcho = {
+  code: RES_OK,
+  data: null,
+  message: "",
+};
+
 export default {
   login: (config: MockjsRequestOptions) => {
     const { account } = JSON.parse(config.body);
     const token = tokens[account];
     if (!token) {
       return {
+        ...defaultEcho,
         code: RES_ERROR,
         message: "用户名或密码错误",
       };
     }
     return {
+      ...defaultEcho,
       code: RES_OK,
-      token,
-      userInfo: users[token],
+      data: {
+        token,
+        userInfo: users[token],
+      },
     };
   },
   logout: (_: MockjsRequestOptions) => {
     return {
+      ...defaultEcho,
       code: RES_OK,
-      data: "success",
+      message: "success",
     };
   },
   userInfo: (config: MockjsRequestOptions) => {
@@ -69,19 +80,22 @@ export default {
     const userInfo = users[token];
     if (!userInfo) {
       return {
-        status: RES_ERROR,
+        ...defaultEcho,
+        code: RES_ERROR,
         message: "获取用户信息失败",
       };
     }
     return {
-      status: RES_OK,
-      userInfo,
+      ...defaultEcho,
+      code: RES_OK,
+      data: userInfo,
     };
   },
   getUsers: () => {
     return {
-      status: RES_OK,
-      users: Object.values(users),
+      ...defaultEcho,
+      code: RES_OK,
+      data: Object.values(users),
     };
   },
   deleteUser: (config: MockjsRequestOptions) => {
@@ -92,7 +106,9 @@ export default {
       delete users[token];
     }
     return {
-      status: 0,
+      ...defaultEcho,
+      code: RES_OK,
+      message: "删除成功",
     };
   },
   editUser: (config: MockjsRequestOptions) => {
@@ -103,7 +119,9 @@ export default {
       users[token] = { ...users[token], ...data };
     }
     return {
-      status: 0,
+      ...defaultEcho,
+      code: RES_OK,
+      message: "编辑成功",
     };
   },
   ValidatUserID: (config: MockjsRequestOptions) => {
@@ -111,11 +129,15 @@ export default {
     const token = tokens[userID];
     if (token) {
       return {
-        status: 1,
+        ...defaultEcho,
+        code: RES_OK,
+        message: "验证成功",
       };
     } else {
       return {
-        status: 0,
+        ...defaultEcho,
+        code: RES_ERROR,
+        message: "验证失败",
       };
     }
   },
@@ -124,11 +146,13 @@ export default {
     const { id } = data;
     tokens[id] = `${id}-token`;
     users[`${id}-token`] = {
-      ...users["guest-token"],
+      ...users[`guest-token`],
       ...data,
     };
     return {
-      status: 0,
+      ...defaultEcho,
+      code: RES_OK,
+      message: "添加成功",
     };
   },
 };

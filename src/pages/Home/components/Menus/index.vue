@@ -2,7 +2,7 @@
   <div>
     <div class="menu-header">
       <img alt="Vue logo" class="logo" src="@/assets/logo.svg" />
-      Gavin Guo
+      {{ userStore.userInfo?.name }}
     </div>
     <a-menu
       style="width: 200px"
@@ -53,7 +53,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs, toRaw } from "vue";
+import { defineComponent, reactive, toRefs } from "vue";
 import { useRouter } from "vue-router";
 import { useMenusStore } from "@/store/menus";
 import {
@@ -67,6 +67,7 @@ import {
   TableOutlined,
 } from "@ant-design/icons-vue";
 import { menuMapping } from "./menuMapping";
+import { useLoginStore } from "@/store/user";
 
 interface MenusProps {
   theme?: string;
@@ -78,11 +79,13 @@ export default defineComponent({
   props: ["theme", "selectedKeys", "openKeys"],
   setup(props: MenusProps) {
     const router = useRouter();
+    const userStore = useLoginStore();
+    const menusStore = useMenusStore();
+
     const state = reactive({
       selectedKeys: props.selectedKeys || ["首页"],
       openKeys: props.openKeys || [],
     });
-    const menusStore = useMenusStore();
 
     const handleClickMenu = ({ keyPath }: { keyPath: string[] }) => {
       const paths = [];
@@ -96,6 +99,7 @@ export default defineComponent({
     };
 
     return {
+      userStore,
       ...toRefs(props),
       ...toRefs(state),
       handleClickMenu,

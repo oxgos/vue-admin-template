@@ -90,6 +90,8 @@ router.beforeEach((to, from) => {
   ) {
     // 将用户重定向到登录页面
     return { name: "login" };
+  } else {
+    store.getUserInfo();
   }
 });
 

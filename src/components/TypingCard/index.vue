@@ -6,14 +6,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  onMounted,
-  reactive,
-  ref,
-  toRaw,
-  VNodeRef,
-} from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import Typing, { TypingOpts } from "@/utils/typing";
 
 interface TypingCardProps {

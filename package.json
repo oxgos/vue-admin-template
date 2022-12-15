@@ -16,14 +16,18 @@
     "axios": "^1.2.1",
     "driver.js": "^0.9.8",
     "echarts": "^5.4.1",
+    "lodash-es": "^4.17.21",
     "pinia": "^2.0.28",
+    "uuid": "^9.0.0",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.4",
+    "@types/lodash-es": "^4.17.6",
     "@types/mockjs": "^1.0.7",
     "@types/node": "^18.11.12",
+    "@types/uuid": "^9.0.0",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vitejs/plugin-vue-jsx": "^3.0.0",
     "@vue/eslint-config-prettier": "^7.0.0",
