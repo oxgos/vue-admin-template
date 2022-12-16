@@ -67,6 +67,7 @@ import { useMenusStore } from "@/store/menus";
 import { useLoginStore } from "@/store/user";
 import { menuMapping } from "./menuMapping";
 import SubMenu from "./SubMenu.vue";
+import bus, { RESIZE_CHART } from "@/utils/bus";
 
 interface MenusProps {
   theme?: string;
@@ -146,8 +147,8 @@ export default defineComponent({
 
     const toggleCollapsed = () => {
       state.collapsed = !state.collapsed;
-      console.log("state.collapsed > ", state.collapsed);
       state.openKeys = state.collapsed ? [] : state.preOpenKeys;
+      bus.emit(RESIZE_CHART);
     };
 
     const handleClickMenu = ({ keyPath }: { keyPath: string[] }) => {

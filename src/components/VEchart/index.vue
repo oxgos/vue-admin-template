@@ -3,6 +3,7 @@
     <div
       ref="el"
       :style="{ height: `${height === -1 ? '400px' : height + 'px'}` }"
+      class="chart"
     ></div>
   </div>
 </template>
@@ -10,14 +11,17 @@
 <script lang="ts">
 import {
   defineComponent,
+  nextTick,
+  onBeforeUnmount,
   onMounted,
-  onUnmounted,
   ref,
   toRaw,
   watch,
 } from "vue";
 import * as echarts from "echarts";
 import type { EChartsType } from "echarts";
+import bus, { RESIZE_CHART } from "@/utils/bus";
+import { throttle } from "lodash-es";
 
 export default defineComponent({
   props: {
@@ -32,38 +36,46 @@ export default defineComponent({
   },
   setup(props) {
     const el = ref<HTMLDivElement>();
-    const chartIns = ref<EChartsType>();
+    let chartIns: EChartsType;
 
     const initChart = () => {
       if (el.value) {
-        if (!chartIns.value) {
-          chartIns.value = echarts.init(el.value);
+        if (!chartIns) {
+          chartIns = echarts.init(el.value);
         }
         if (props.options) {
-          chartIns.value.clear();
-          chartIns.value.setOption(toRaw(props.options));
+          chartIns.clear();
+          chartIns.setOption(toRaw(props.options));
         }
       }
     };
 
     const handleResize = () => {
-      if (el.value && chartIns.value) {
-        chartIns.value.resize();
-      }
+      nextTick(() => {
+        const wrapperWidth = document
+          .getElementsByClassName("chart-wrapper")[0]
+          .getBoundingClientRect().width;
+        if (el.value && chartIns) {
+          chartIns.resize({
+            width: parseInt(wrapperWidth.toString()),
+          });
+        }
+      });
     };
 
     onMounted(() => {
       initChart();
-
       window.addEventListener("resize", handleResize);
+      bus.on(RESIZE_CHART, handleResize);
     });
 
-    onUnmounted(() => {
+    onBeforeUnmount(() => {
       window.removeEventListener("resize", handleResize);
+      bus.off(RESIZE_CHART, handleResize);
     });
 
     watch(props.options, () => {
-      if (chartIns.value) {
+      if (chartIns) {
         initChart();
       }
     });
@@ -78,5 +90,9 @@ export default defineComponent({
 <style lang="less" scoped>
 .chart-wrapper {
   position: relative;
+  width: 100%;
+  .chart {
+    width: 100%;
+  }
 }
 </style>

@@ -21,6 +21,7 @@ specifiers:
   eslint-plugin-vue: ^9.3.0
   less: ^4.1.3
   lodash-es: ^4.17.21
+  mitt: ^3.0.0
   mockjs: ^1.1.0
   npm-run-all: ^4.1.5
   pinia: ^2.0.28
@@ -40,6 +41,7 @@ dependencies:
   driver.js: 0.9.8
   echarts: 5.3.0
   lodash-es: 4.17.21
+  mitt: 3.0.0
   pinia: 2.0.28_e7lp6ggkpgyi5vqd44m2kxvk6i
   uuid: 9.0.0
   vue: 3.2.45
@@ -2286,6 +2288,10 @@ packages:
     dependencies:
       brace-expansion: 2.0.1
     dev: true
+
+  /mitt/3.0.0:
+    resolution: {integrity: sha512-7dX2/10ITVyqh4aOSVI9gdape+t9l2/8QxHrFmUXu4EEUpdlxl6RudZUPZoc+zuY2hk1j7XxVroIVIan/pD/SQ==}
+    dev: false
 
   /mockjs/1.1.0:
     resolution: {integrity: sha512-eQsKcWzIaZzEZ07NuEyO4Nw65g0hdWAyurVol1IPl1gahRwY+svqzfgfey8U8dahLwG44d6/RwEzuK52rSa/JQ==}

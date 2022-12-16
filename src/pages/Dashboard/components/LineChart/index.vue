@@ -20,13 +20,6 @@ export default defineComponent({
   setup(props) {
     const options = reactive<any>({
       backgroundColor: "#fff",
-      xAxis: {
-        data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-        boundaryGap: false,
-        axisTick: {
-          show: false,
-        },
-      },
       grid: {
         left: 40,
         right: 40,
@@ -37,6 +30,13 @@ export default defineComponent({
       tooltip: {
         trigger: "axis",
         padding: [5, 10],
+      },
+      xAxis: {
+        data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        boundaryGap: false,
+        axisTick: {
+          show: false,
+        },
       },
       yAxis: {
         axisTick: {
