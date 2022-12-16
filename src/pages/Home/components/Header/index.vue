@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, toRaw } from "vue";
+import { defineComponent } from "vue";
 import { UserOutlined } from "@ant-design/icons-vue";
 import { useMenusStore } from "@/store/menus";
 import { useLoginStore } from "@/store/user";
@@ -61,11 +61,19 @@ export default defineComponent({
 
 <style lang="less" scoped>
 .header {
+  padding: 0 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 100%;
+  height: 64px;
   width: 100%;
+  background-color: #fff;
+  overflow: hidden;
+  .header-left {
+    .ant-breadcrumb {
+      font-size: 16px;
+    }
+  }
   .header-right {
     cursor: pointer;
   }

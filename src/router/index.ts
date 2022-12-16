@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Login from "@/pages/Login/index.vue";
 import Home from "@/pages/Home/index.vue";
 import { useLoginStore } from "@/store/user";
+import { useMenusStore } from "@/store/menus";
 
 const Dashboard = () => import("@/pages/Dashboard/index.vue");
 const Guide = () => import("@/pages/Guide/index.vue");
@@ -82,16 +83,18 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from) => {
-  const store = useLoginStore();
+  const userstore = useLoginStore();
+  const menusstore = useMenusStore();
   if (
     // 检查用户是否已登录
-    !store.isLogin() &&
+    !userstore.isLogin() &&
     to.name !== "login"
   ) {
     // 将用户重定向到登录页面
     return { name: "login" };
   } else {
-    store.getUserInfo();
+    userstore.getUserInfo();
+    menusstore.getMenuSelectKeys();
   }
 });
 

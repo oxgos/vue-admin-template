@@ -1,47 +1,52 @@
 <template>
   <main class="login-page">
     <div class="login-page-content">
-      <h2 class="login-page-content-title">用户登录</h2>
-      <a-form :model="formState">
-        <a-form-item>
-          <a-input
-            v-model:value="formState.account"
-            placeholder="请输入用户名"
-            :maxlength="64"
-          >
-            <template #prefix
-              ><UserOutlined style="color: rgba(0, 0, 0, 0.25)"
-            /></template>
-          </a-input>
-        </a-form-item>
-        <a-form-item>
-          <a-input
-            v-model:value="formState.password"
-            type="password"
-            placeholder="请输入用户密码"
-            :maxlength="64"
-          >
-            <template #prefix
-              ><LockOutlined style="color: rgba(0, 0, 0, 0.25)"
-            /></template>
-          </a-input>
-        </a-form-item>
-        <a-form-item>
-          <a-button type="primary" @click="onSubmit" :style="{ width: '100%' }"
-            >登录</a-button
-          >
-        </a-form-item>
-        <a-form-item>
-          <div
-            class="tips-list"
-            v-for="username in ['admin', 'editor', 'guest']"
-            :key="username"
-          >
-            <span>账号: {{ username }}</span>
-            <span>密码: 随便填</span>
-          </div>
-        </a-form-item>
-      </a-form>
+      <a-spin :spinning="spinning">
+        <h2 class="login-page-content-title">用户登录</h2>
+        <a-form :model="formState">
+          <a-form-item>
+            <a-input
+              v-model:value="formState.account"
+              placeholder="请输入用户名"
+              :maxlength="64"
+            >
+              <template #prefix
+                ><UserOutlined style="color: rgba(0, 0, 0, 0.25)"
+              /></template>
+            </a-input>
+          </a-form-item>
+          <a-form-item>
+            <a-input
+              v-model:value="formState.password"
+              type="password"
+              placeholder="请输入用户密码"
+              :maxlength="64"
+            >
+              <template #prefix
+                ><LockOutlined style="color: rgba(0, 0, 0, 0.25)"
+              /></template>
+            </a-input>
+          </a-form-item>
+          <a-form-item>
+            <a-button
+              type="primary"
+              @click="onSubmit"
+              :style="{ width: '100%' }"
+              >登录</a-button
+            >
+          </a-form-item>
+          <a-form-item>
+            <div
+              class="tips-list"
+              v-for="username in ['admin', 'editor', 'guest']"
+              :key="username"
+            >
+              <span>账号: {{ username }}</span>
+              <span>密码: 随便填</span>
+            </div>
+          </a-form-item>
+        </a-form>
+      </a-spin>
     </div>
   </main>
 </template>
@@ -58,6 +63,7 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const store = useLoginStore();
+    const spinning = ref(false);
     const formState = reactive({
       account: "",
       password: "",
@@ -71,6 +77,7 @@ export default defineComponent({
     const onSubmit = async () => {
       try {
         const { account } = toRaw(formState);
+        spinning.value = true;
         const resp = await store.login(account);
         if (resp.code === RES_OK) {
           router.push("/dashboard");
@@ -81,10 +88,14 @@ export default defineComponent({
         }
       } catch (e: any) {
         errorMessage(e.message);
+        throw e;
+      } finally {
+        spinning.value = false;
       }
     };
 
     return {
+      spinning,
       formState,
       onSubmit,
     };

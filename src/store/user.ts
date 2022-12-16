@@ -9,6 +9,8 @@ import {
   UserInfo,
 } from "@/apis/dao/user";
 
+import { useMenusStore } from "./menus";
+
 const USER_SESSION_KEY = "Userinfo";
 
 // 第一个参数是应用程序中 store 的唯一 id
@@ -35,6 +37,10 @@ export const useLoginStore = defineStore("login", {
         }
       }
     },
+    resetUserInfo() {
+      this.userInfo = null;
+      window.sessionStorage.removeItem(USER_SESSION_KEY);
+    },
     async login(account: string) {
       try {
         const resp = await loginApi(account);
@@ -56,9 +62,10 @@ export const useLoginStore = defineStore("login", {
     },
     async logout() {
       try {
+        const menuStore = useMenusStore();
         const data = await logoutApi();
-        this.userInfo = null;
-        window.sessionStorage.removeItem(USER_SESSION_KEY);
+        menuStore.resetMenu();
+        this.resetUserInfo();
         return data;
       } catch (e: any) {
         throw e;

@@ -1,5 +1,5 @@
 <template>
-  <a-table :columns="columns" :data-source="data.items">
+  <a-table :columns="columns" :data-source="data.items" :loading="loading">
     <template #tags="{ text: tag }">
       <span>
         <a-tag :color="tag === 'success' ? 'green' : 'red'">
@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive } from "vue";
+import { defineComponent, onMounted, reactive, ref } from "vue";
 import { message } from "ant-design-vue";
 import { useDashboardStore } from "@/store/dashboard";
 import { RES_OK } from "@/utils/request";
@@ -48,15 +48,20 @@ export default defineComponent({
     const data = reactive<DataReactive>({
       items: [],
     });
+    const loading = ref(false);
 
     const fetchData = async () => {
       try {
+        loading.value = true;
         const resp = await store.getOrders();
         if (resp.code === RES_OK) {
           data.items = resp.data;
         }
       } catch (e: any) {
         message.error(e.message);
+        throw e;
+      } finally {
+        loading.value = false;
       }
     };
 
@@ -67,6 +72,7 @@ export default defineComponent({
     return {
       columns,
       data,
+      loading,
     };
   },
 });

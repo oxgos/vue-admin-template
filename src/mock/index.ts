@@ -3,6 +3,10 @@ import loginAPI from "./login";
 import orderAPI from "./order";
 // import tableAPI from "./table";
 
+Mock.setup({
+  timeout: "200-600",
+});
+
 // 登录与用户相关
 Mock.mock(/\/login/, "post", loginAPI.login);
 Mock.mock(/\/logout/, "post", loginAPI.logout);

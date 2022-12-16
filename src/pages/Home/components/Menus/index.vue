@@ -1,44 +1,52 @@
 <template>
-  <div>
-    <div class="menu-header">
-      <img alt="Vue logo" class="logo" src="@/assets/logo.svg" />
-      {{ userStore.userInfo?.name }}
+  <div class="menus" :style="{ width: collapsed ? '80px' : '200px' }">
+    <div class="menus-container">
+      <div class="menu-header">
+        <img alt="Vue logo" class="logo" src="@/assets/logo.svg" />
+        <template v-if="!collapsed">
+          {{ userStore.userInfo?.name }}
+        </template>
+      </div>
+      <draggable
+        :list="list"
+        item-key="key"
+        class="list-group"
+        ghost-class="ghost"
+        @start="dragging = true"
+        @end="dragging = false"
+      >
+        <template #item="{ element }">
+          <a-menu
+            v-model:openKeys="openKeys"
+            v-model:selectedKeys="selectedKeys"
+            mode="inline"
+            :inline-collapsed="collapsed"
+            :theme="theme || 'dark'"
+            @click="handleClickMenu"
+          >
+            <template v-if="!element.children">
+              <a-menu-item :key="element.key">
+                <template #icon v-if="element.icon">
+                  <component :is="element.icon" />
+                </template>
+                {{ element.title }}
+              </a-menu-item>
+            </template>
+            <template v-else>
+              <sub-menu :menu-info="element" :key="element.key" />
+            </template>
+          </a-menu>
+        </template>
+      </draggable>
     </div>
-    <draggable
-      :list="list"
-      item-key="key"
-      class="list-group"
-      ghost-class="ghost"
-      @start="dragging = true"
-      @end="dragging = false"
-    >
-      <template #item="{ element }">
-        <a-menu
-          style="width: 200px"
-          v-model:openKeys="openKeys"
-          v-model:selectedKeys="selectedKeys"
-          mode="inline"
-          :theme="theme || 'dark'"
-          @click="handleClickMenu"
-        >
-          <template v-if="!element.children">
-            <a-menu-item :key="element.key">
-              <template #icon v-if="element.icon">
-                <component :is="element.icon" />
-              </template>
-              {{ element.title }}
-            </a-menu-item>
-          </template>
-          <template v-else>
-            <sub-menu :menu-info="element" :key="element.key" />
-          </template>
-        </a-menu>
-      </template>
-    </draggable>
+    <div class="slider-trigger" @click="toggleCollapsed">
+      <MenuUnfoldOutlined v-if="collapsed" />
+      <MenuFoldOutlined v-else />
+    </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, ref, toRefs } from "vue";
+import { defineComponent, reactive, ref, toRefs, watch } from "vue";
 import { useRouter } from "vue-router";
 import draggable from "vuedraggable";
 import {
@@ -50,6 +58,10 @@ import {
   KeyOutlined,
   ClusterOutlined,
   TableOutlined,
+  LeftOutlined,
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
+  DoubleRightOutlined,
 } from "@ant-design/icons-vue";
 import { useMenusStore } from "@/store/menus";
 import { useLoginStore } from "@/store/user";
@@ -124,11 +136,19 @@ export default defineComponent({
         ],
       },
     ]);
-    const dragging = ref(false);
     const state = reactive({
       selectedKeys: props.selectedKeys || ["首页"],
       openKeys: props.openKeys || [],
+      preOpenKeys: props.openKeys || [],
+      dragging: false,
+      collapsed: false,
     });
+
+    const toggleCollapsed = () => {
+      state.collapsed = !state.collapsed;
+      console.log("state.collapsed > ", state.collapsed);
+      state.openKeys = state.collapsed ? [] : state.preOpenKeys;
+    };
 
     const handleClickMenu = ({ keyPath }: { keyPath: string[] }) => {
       const paths = [];
@@ -141,13 +161,20 @@ export default defineComponent({
       router.push(paths[paths.length - 1]);
     };
 
+    watch(
+      () => state.openKeys,
+      (val, oldVal) => {
+        state.preOpenKeys = oldVal;
+      }
+    );
+
     return {
-      dragging,
       list,
       userStore,
       ...toRefs(props),
       ...toRefs(state),
       handleClickMenu,
+      toggleCollapsed,
     };
   },
   components: {
@@ -159,6 +186,10 @@ export default defineComponent({
     KeyOutlined,
     ClusterOutlined,
     TableOutlined,
+    DoubleRightOutlined,
+    LeftOutlined,
+    MenuUnfoldOutlined,
+    MenuFoldOutlined,
     SubMenu,
     draggable,
   },
@@ -166,17 +197,41 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
-.menu-header {
-  padding-left: 24px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  height: 64px;
-  color: #fff;
-  .logo {
-    margin-right: 8px;
-    width: 30px;
-    height: 30px;
+.menus {
+  position: relative;
+  padding-bottom: 40px;
+  height: 100%;
+  .menus-container {
+    height: 100%;
+    overflow-y: auto;
+  }
+  .menu-header {
+    padding-left: 24px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 64px;
+    color: #fff;
+    .logo {
+      margin-right: 8px;
+      width: 30px;
+      height: 30px;
+    }
+  }
+  .slider-trigger {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    padding-right: 10px;
+    width: 100%;
+    height: 40px;
+    color: #fff;
+    background-color: #00b259;
+    cursor: pointer;
+    z-index: 10;
   }
 }
 </style>

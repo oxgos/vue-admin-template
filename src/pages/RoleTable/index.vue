@@ -3,7 +3,12 @@
     <a-button class="editable-add-btn" @click="onAdd" style="margin: 8px 0"
       >添加用户</a-button
     >
-    <a-table bordered :data-source="dataSource" :columns="columns">
+    <a-table
+      bordered
+      :data-source="dataSource"
+      :columns="columns"
+      :loading="loading"
+    >
       <template #operation="{ record }">
         <a
           @click="onEdit(record.id)"
@@ -75,6 +80,7 @@ export default defineComponent({
     const store = useLoginStore();
     const dataSource = ref<UserInfo[]>([]);
     const editableData = ref<UserInfo | null>(null);
+    const loading = ref(false);
     const visible = ref(false);
     const modalTitle = ref("添加用户");
 
@@ -95,6 +101,7 @@ export default defineComponent({
     const onSave = async (user: UserInfo) => {
       let editUser = dataSource.value.find((item) => user.id === item.id);
       try {
+        loading.value = true;
         // 编辑
         if (editableData.value) {
           await store.editUser(user);
@@ -109,6 +116,9 @@ export default defineComponent({
         closeModal();
       } catch (e: any) {
         message.error(e.message);
+        throw e;
+      } finally {
+        loading.value = false;
       }
     };
 
@@ -133,10 +143,14 @@ export default defineComponent({
 
     onMounted(async () => {
       try {
+        loading.value = true;
         const { data: users } = await store.getUsers();
         dataSource.value = users;
       } catch (e: any) {
         message.error(e.message);
+        throw e;
+      } finally {
+        loading.value = false;
       }
     });
 
@@ -146,6 +160,7 @@ export default defineComponent({
       editableData,
       modalTitle,
       visible,
+      loading,
       onDelete,
       onAdd,
       onEdit,

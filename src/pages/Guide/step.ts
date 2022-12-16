@@ -8,11 +8,19 @@ const steps = [
     },
   },
   {
-    element: ".ant-layout-sider",
+    element: ".home-slider",
     popover: {
       title: "菜单栏",
       description: "点击选择进行跳转",
       position: "right",
+    },
+  },
+  {
+    element: ".slider-trigger",
+    popover: {
+      title: "菜单栏折叠",
+      description: "点击菜单栏折叠",
+      position: "top",
     },
   },
   {

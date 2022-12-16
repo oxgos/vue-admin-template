@@ -1,18 +1,14 @@
 <template>
-  <main class="dashboard">
-    <a-layout>
-      <a-layout-sider>
+  <main class="home">
+    <div class="container">
+      <div class="home-slider">
         <Menus />
-      </a-layout-sider>
-      <a-layout>
-        <a-layout-header>
-          <v-header />
-        </a-layout-header>
-        <a-layout-content>
-          <RouterView />
-        </a-layout-content>
-      </a-layout>
-    </a-layout>
+      </div>
+      <div class="home-content">
+        <v-header />
+        <RouterView />
+      </div>
+    </div>
   </main>
 </template>
 
@@ -22,6 +18,12 @@ import { RouterView } from "vue-router";
 import Menus from "./components/Menus/index.vue";
 import VHeader from "./components/Header/index.vue";
 export default defineComponent({
+  setup() {
+    const collapsed = ref(false);
+    return {
+      collapsed,
+    };
+  },
   components: {
     Menus,
     VHeader,
@@ -30,12 +32,21 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
-.dashboard {
+.home {
   width: 100%;
   height: 100%;
-  overflow-y: auto;
-  .ant-layout {
+  .container {
+    display: flex;
     height: 100%;
+    .home-slider {
+      background: #001529;
+      transition: all 0.2s;
+    }
+    .home-content {
+      flex: 1;
+      background-color: #f0f2f5;
+      overflow-y: auto;
+    }
     .ant-layout-header {
       padding: 0 20px;
       background-color: #fff;
