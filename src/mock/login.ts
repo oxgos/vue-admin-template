@@ -1,6 +1,7 @@
-import { RES_ERROR } from "./../utils/request";
+import { RES_ERROR } from "@/utils/request";
 import { RES_OK } from "@/utils/request";
 import type { MockjsRequestOptions } from "mockjs";
+import { defaultEcho } from "./constant";
 
 interface UserInfo {
   id: string;
@@ -40,12 +41,6 @@ const users: Users = {
     avatar: "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
     description: "仅能看到Dashboard、开发文档、权限测试和关于作者四个页面",
   },
-};
-
-const defaultEcho = {
-  code: RES_OK,
-  data: null,
-  message: "",
 };
 
 export default {

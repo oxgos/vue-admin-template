@@ -51,7 +51,7 @@ import { defineComponent, reactive, ref, toRaw } from "vue";
 import { useRouter } from "vue-router";
 import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
-import request, { RES_OK } from "@/utils/request";
+import { RES_OK } from "@/utils/request";
 import { useLoginStore } from "@/store/user";
 
 export default defineComponent({

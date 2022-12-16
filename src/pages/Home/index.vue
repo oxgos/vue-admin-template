@@ -33,6 +33,7 @@ export default defineComponent({
 .dashboard {
   width: 100%;
   height: 100%;
+  overflow-y: auto;
   .ant-layout {
     height: 100%;
     .ant-layout-header {

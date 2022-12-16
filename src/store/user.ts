@@ -38,15 +38,17 @@ export const useLoginStore = defineStore("login", {
     async login(account: string) {
       try {
         const resp = await loginApi(account);
-        const userInfo: UserInfo = {
-          ...resp.data.userInfo,
-          token: resp.data.token,
-        };
-        this.userInfo = userInfo;
-        window.sessionStorage.setItem(
-          USER_SESSION_KEY,
-          JSON.stringify(userInfo)
-        );
+        if (resp.code === 200) {
+          const userInfo: UserInfo = {
+            ...resp.data.userInfo,
+            token: resp.data.token,
+          };
+          this.userInfo = userInfo;
+          window.sessionStorage.setItem(
+            USER_SESSION_KEY,
+            JSON.stringify(userInfo)
+          );
+        }
         return resp;
       } catch (e: any) {
         throw e;

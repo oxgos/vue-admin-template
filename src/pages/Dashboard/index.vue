@@ -1,5 +1,5 @@
 <template>
-  <main class="dashboard">
+  <div class="dashboard">
     <a-row :gutter="58" style="margin-bottom: 10">
       <a-col
         class="gutter-row"
@@ -21,24 +21,43 @@
     </div>
     <div class="chart-group">
       <a-row :gutter="32">
-        <a-col :xs="24" :sm="24" :lg="8">
-          <!-- <RaddarChart /> -->
+        <a-col :gutter="12" :xs="24" :sm="24" :lg="8">
+          <div class="chart-item">
+            <RaddarChart />
+          </div>
         </a-col>
-        <a-col :xs="24" :sm="24" :lg="8">
-          <!-- <PieChart /> -->
+        <a-col :gutter="12" :xs="24" :sm="24" :lg="8">
+          <div class="chart-item">
+            <PieChart />
+          </div>
         </a-col>
-        <a-col :xs="24" :sm="24" :lg="8">
-          <!-- <BarChart /> -->
+        <a-col :gutter="12" :xs="24" :sm="24" :lg="8">
+          <div class="chart-item">
+            <BarChart />
+          </div>
         </a-col>
       </a-row>
     </div>
-  </main>
+    <div class="table-group">
+      <div class="table-group-left">
+        <OrderTable />
+      </div>
+      <div class="table-group-right">
+        <CardBox />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
 import { computed, ComputedRef, defineComponent, ref } from "vue";
 import VCard from "@/components/VCard/index.vue";
 import LineChart from "./components/LineChart/index.vue";
+import RaddarChart from "./components/RaddarChart/index.vue";
+import PieChart from "./components/PieChart/index.vue";
+import BarChart from "./components/BarChart/index.vue";
+import OrderTable from "./components/OrderTable/index.vue";
+import CardBox from "./components/CardBox/index.vue";
 
 interface LineChartItemData {
   expectedData: number[];
@@ -120,6 +139,11 @@ export default defineComponent({
   components: {
     VCard,
     LineChart,
+    RaddarChart,
+    BarChart,
+    PieChart,
+    OrderTable,
+    CardBox,
   },
 });
 </script>
@@ -127,5 +151,21 @@ export default defineComponent({
 <style lang="less" scoped>
 .dashboard {
   padding: 20px;
+  .chart-group,
+  .table-group {
+    margin-top: 10px;
+  }
+  .chart-group {
+    .chart-item {
+      background-color: #fff;
+    }
+  }
+  .table-group {
+    display: flex;
+    .table-group-left,
+    .table-group-right {
+      flex: 0 0 50%;
+    }
+  }
 }
 </style>

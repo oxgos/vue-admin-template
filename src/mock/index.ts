@@ -1,6 +1,6 @@
 import Mock from "mockjs";
 import loginAPI from "./login";
-// import remoteSearchAPI from "./remoteSearch";
+import orderAPI from "./order";
 // import tableAPI from "./table";
 
 // 登录与用户相关
@@ -13,7 +13,7 @@ Mock.mock(/\/user\/edit/, "post", loginAPI.editUser);
 Mock.mock(/\/user\/validatUserID/, "post", loginAPI.ValidatUserID);
 Mock.mock(/\/user\/add/, "post", loginAPI.addUser);
 
-// // dashboard
-// Mock.mock(/\/transaction\/list/, "get", remoteSearchAPI.transactionList);
+// dashboard
+Mock.mock(/\/transaction\/list/, "get", orderAPI.transactionList);
 
 export default Mock;
