@@ -29,6 +29,7 @@ const steps = [
       title: "个人信息",
       description: "系统设置",
       position: "left-bottom",
+      offset: 50,
     },
   },
 ];
