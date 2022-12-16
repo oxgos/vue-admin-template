@@ -46,4 +46,8 @@ export const menuMapping: MenuMapping = {
     pageName: "拖拽列表",
     path: "/v-components/drag-list",
   },
+  clipboard: {
+    pageName: "剪切板",
+    path: "/clipboard",
+  },
 };

@@ -18,12 +18,6 @@ import { RouterView } from "vue-router";
 import Menus from "./components/Menus/index.vue";
 import VHeader from "./components/Header/index.vue";
 export default defineComponent({
-  setup() {
-    const collapsed = ref(false);
-    return {
-      collapsed,
-    };
-  },
   components: {
     Menus,
     VHeader,

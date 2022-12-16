@@ -12,6 +12,7 @@ const DragList = () => import("@/pages/VComponents/DragList/index.vue");
 const RouterNest = () => import("@/pages/RouterNest/index.vue");
 const RouterOneOne = () => import("@/pages/RouterNest/router1-1.vue");
 const RouterOneTwoOne = () => import("@/pages/RouterNest/router1-2-1.vue");
+const Clipboard = () => import("@/pages/Clipboard/index.vue");
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -71,6 +72,11 @@ const router = createRouter({
               component: RouterOneTwoOne,
             },
           ],
+        },
+        {
+          path: "/clipboard",
+          name: "Clipboard",
+          component: Clipboard,
         },
       ],
     },

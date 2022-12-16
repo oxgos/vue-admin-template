@@ -62,6 +62,7 @@ import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
   DoubleRightOutlined,
+  CopyOutlined,
 } from "@ant-design/icons-vue";
 import { useMenusStore } from "@/store/menus";
 import { useLoginStore } from "@/store/user";
@@ -136,6 +137,11 @@ export default defineComponent({
           },
         ],
       },
+      {
+        key: "clipboard",
+        title: "剪切板",
+        icon: "CopyOutlined",
+      },
     ]);
     const state = reactive({
       selectedKeys: props.selectedKeys || ["首页"],
@@ -191,6 +197,7 @@ export default defineComponent({
     LeftOutlined,
     MenuUnfoldOutlined,
     MenuFoldOutlined,
+    CopyOutlined,
     SubMenu,
     draggable,
   },
