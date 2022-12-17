@@ -5,7 +5,7 @@
     </div>
     <div class="card-panel-description">
       <p class="card-panel-text">{{ title }}</p>
-      <div class="card-panel-num">{{ num }}</div>
+      <div class="card-panel-num" v-number="num"></div>
     </div>
   </div>
 </template>
@@ -18,6 +18,7 @@ import {
   DollarCircleOutlined,
   ShoppingCartOutlined,
 } from "@ant-design/icons-vue";
+import { vNumber } from "@/directives/vNumber/index";
 
 interface VCardProps {
   title: string;
@@ -61,6 +62,9 @@ export default defineComponent({
     CommentOutlined,
     DollarCircleOutlined,
     ShoppingCartOutlined,
+  },
+  directives: {
+    number: vNumber,
   },
 });
 </script>

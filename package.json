@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^6.1.0",
+    "animejs": "^3.2.1",
     "ant-design-vue": "3.3.0-beta.4",
     "axios": "^1.2.1",
     "clipboard": "^2.0.11",
@@ -27,6 +28,7 @@
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.4",
+    "@types/animejs": "^3.1.6",
     "@types/echarts": "^4.9.16",
     "@types/lodash-es": "^4.17.6",
     "@types/mockjs": "^1.0.7",
