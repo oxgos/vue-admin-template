@@ -3,6 +3,7 @@ import Login from "@/pages/Login/index.vue";
 import Home from "@/pages/Home/index.vue";
 import { useLoginStore } from "@/store/user";
 import { useMenusStore } from "@/store/menus";
+import { RouterKeys } from "@/pages/Home/components/Menus/menuMapping";
 
 const Dashboard = () => import("@/pages/Dashboard/index.vue");
 const Guide = () => import("@/pages/Guide/index.vue");
@@ -23,7 +24,7 @@ const router = createRouter({
     },
     {
       path: "/",
-      name: "home",
+      name: RouterKeys.Home_Key,
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
@@ -31,58 +32,58 @@ const router = createRouter({
       children: [
         {
           path: "dashboard",
-          name: "dashboard",
+          name: RouterKeys.Dashboard_Key,
           component: Dashboard,
         },
         {
           path: "guide",
-          name: "guide",
+          name: RouterKeys.Guide_Key,
           component: Guide,
         },
         {
           path: "/role-table",
-          name: "RoleTable",
+          name: RouterKeys.RoleTable_Key,
           component: RoleTable,
         },
         {
           path: "v-components",
-          name: "vComponents",
+          name: RouterKeys.VComponents_key,
           component: VComponents,
           children: [
             {
               path: "drag-list",
-              name: "dragList",
+              name: RouterKeys.DragList_key,
               component: DragList,
             },
           ],
         },
         {
           path: "router-nest",
-          name: "routerNest",
+          name: RouterKeys.RouterNest_Key,
           component: RouterNest,
           children: [
             {
               path: "router-one-one",
-              name: "routerOneOne",
+              name: RouterKeys.RouterNestOneOne_key,
               component: RouterOneOne,
             },
             {
               path: "router-one-two-one",
-              name: "RouterOneTwoOne",
+              name: RouterKeys.RouterNestOneTwoOne_key,
               component: RouterOneTwoOne,
             },
           ],
         },
         {
           path: "/clipboard",
-          name: "Clipboard",
+          name: RouterKeys.Clipboard_key,
           component: Clipboard,
         },
       ],
     },
     {
       path: "/login",
-      name: "login",
+      name: RouterKeys.Login_Key,
       component: Login,
     },
   ],

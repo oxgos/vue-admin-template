@@ -1,14 +1,17 @@
 <template>
-  <div class="menus" :style="{ width: collapsed ? '80px' : '200px' }">
+  <div
+    class="menus"
+    :style="{ width: menusStore.collapsed ? '80px' : '200px' }"
+  >
     <div class="menus-container">
       <div class="menu-header">
         <img alt="Vue logo" class="logo" src="@/assets/logo.svg" />
-        <template v-if="!collapsed">
+        <template v-if="!menusStore.collapsed">
           {{ userStore.userInfo?.name }}
         </template>
       </div>
       <draggable
-        :list="list"
+        :list="menulist"
         item-key="key"
         class="list-group"
         ghost-class="ghost"
@@ -17,10 +20,10 @@
       >
         <template #item="{ element }">
           <a-menu
-            v-model:openKeys="openKeys"
-            v-model:selectedKeys="selectedKeys"
+            v-model:openKeys="menusStore.openKeys"
+            v-model:selectedKeys="menusStore.selectedKeys"
             mode="inline"
-            :inline-collapsed="collapsed"
+            :inline-collapsed="menusStore.collapsed"
             :theme="theme || 'dark'"
             @click="handleClickMenu"
           >
@@ -40,13 +43,13 @@
       </draggable>
     </div>
     <div class="slider-trigger" @click="toggleCollapsed">
-      <MenuUnfoldOutlined v-if="collapsed" />
+      <MenuUnfoldOutlined v-if="menusStore.collapsed" />
       <MenuFoldOutlined v-else />
     </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, ref, toRefs, watch } from "vue";
+import { defineComponent, reactive, toRefs } from "vue";
 import { useRouter } from "vue-router";
 import draggable from "vuedraggable";
 import {
@@ -66,7 +69,7 @@ import {
 } from "@ant-design/icons-vue";
 import { useMenusStore } from "@/store/menus";
 import { useLoginStore } from "@/store/user";
-import { menuMapping } from "./menuMapping";
+import { menuMapping, menulist } from "./menuMapping";
 import SubMenu from "./SubMenu.vue";
 import bus, { RESIZE_CHART } from "@/utils/bus";
 
@@ -77,83 +80,18 @@ interface MenusProps {
 }
 
 export default defineComponent({
-  props: ["theme", "selectedKeys", "openKeys"],
+  props: ["theme"],
   setup(props: MenusProps) {
     const router = useRouter();
     const userStore = useLoginStore();
     const menusStore = useMenusStore();
 
-    const list = ref([
-      {
-        key: "dashboard",
-        title: "首页",
-        icon: "HomeOutlined",
-      },
-      {
-        key: "guide",
-        title: "引导页",
-        icon: "KeyOutlined",
-      },
-      {
-        key: "roleTable",
-        title: "用户表格",
-        icon: "TableOutlined",
-      },
-      {
-        key: "routerNest",
-        title: "路由嵌套",
-        icon: "KeyOutlined",
-        children: [
-          {
-            key: "routerNestOne",
-            title: "菜单1",
-            children: [
-              {
-                key: "routerNestOneOne",
-                title: "菜单1-1",
-              },
-              {
-                key: "routerNestOneTwo",
-                title: "菜单1-2",
-                children: [
-                  {
-                    key: "routerNestOneTwoOne",
-                    title: "菜单1-2-1",
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        key: "vComponents",
-        title: "组件",
-        icon: "AppstoreOutlined",
-        children: [
-          {
-            key: "dragList",
-            title: "拖拽列表",
-          },
-        ],
-      },
-      {
-        key: "clipboard",
-        title: "剪切板",
-        icon: "CopyOutlined",
-      },
-    ]);
     const state = reactive({
-      selectedKeys: props.selectedKeys || ["首页"],
-      openKeys: props.openKeys || [],
-      preOpenKeys: props.openKeys || [],
       dragging: false,
-      collapsed: false,
     });
 
     const toggleCollapsed = () => {
-      state.collapsed = !state.collapsed;
-      state.openKeys = state.collapsed ? [] : state.preOpenKeys;
+      menusStore.toggleCollapsed();
       bus.emit(RESIZE_CHART);
     };
 
@@ -162,22 +100,17 @@ export default defineComponent({
       const selectedKeys = [];
       for (const key of keyPath) {
         paths.push(menuMapping[key].path);
-        selectedKeys.push(menuMapping[key].pageName);
+        selectedKeys.push(menuMapping[key]);
       }
       menusStore.changeSelectKeys(selectedKeys);
+      menusStore.pushHistoryPath(selectedKeys);
       router.push(paths[paths.length - 1]);
     };
 
-    watch(
-      () => state.openKeys,
-      (val, oldVal) => {
-        state.preOpenKeys = oldVal;
-      }
-    );
-
     return {
-      list,
+      menulist,
       userStore,
+      menusStore,
       ...toRefs(props),
       ...toRefs(state),
       handleClickMenu,
