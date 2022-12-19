@@ -49,7 +49,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from "vue";
+import { defineComponent, reactive, ref, toRefs } from "vue";
 import { useRouter } from "vue-router";
 import draggable from "vuedraggable";
 import {
@@ -69,7 +69,7 @@ import {
 } from "@ant-design/icons-vue";
 import { useMenusStore } from "@/store/menus";
 import { useLoginStore } from "@/store/user";
-import { menuMapping, menulist } from "./menuMapping";
+import { menuMapping, RouterKeys } from "./menuMapping";
 import SubMenu from "./SubMenu.vue";
 import bus, { RESIZE_CHART } from "@/utils/bus";
 
@@ -85,6 +85,67 @@ export default defineComponent({
     const router = useRouter();
     const userStore = useLoginStore();
     const menusStore = useMenusStore();
+
+    const menulist = ref([
+      {
+        key: RouterKeys.Dashboard_Key,
+        title: "首页",
+        icon: "HomeOutlined",
+      },
+      {
+        key: RouterKeys.Guide_Key,
+        title: "引导页",
+        icon: "KeyOutlined",
+      },
+      {
+        key: RouterKeys.RoleTable_Key,
+        title: "用户表格",
+        icon: "TableOutlined",
+      },
+      {
+        key: RouterKeys.RouterNest_Key,
+        title: "路由嵌套",
+        icon: "KeyOutlined",
+        children: [
+          {
+            key: RouterKeys.RouterNestOne_Key,
+            title: "菜单1",
+            children: [
+              {
+                key: RouterKeys.RouterNestOneOne_key,
+                title: "菜单1-1",
+              },
+              {
+                key: RouterKeys.RouterNestOneTwo_key,
+                title: "菜单1-2",
+                children: [
+                  {
+                    key: RouterKeys.RouterNestOneTwoOne_key,
+                    title: "菜单1-2-1",
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        key: RouterKeys.VComponents_key,
+        title: "组件",
+        icon: "AppstoreOutlined",
+        children: [
+          {
+            key: RouterKeys.DragList_key,
+            title: "拖拽列表",
+          },
+        ],
+      },
+      {
+        key: RouterKeys.Clipboard_key,
+        title: "剪切板",
+        icon: "CopyOutlined",
+      },
+    ]);
 
     const state = reactive({
       dragging: false,
