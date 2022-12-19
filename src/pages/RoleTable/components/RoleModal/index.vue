@@ -21,11 +21,7 @@
         <a-input v-model:value="formState.name" :maxLength="64" />
       </a-form-item>
       <a-form-item ref="role" label="角色名称" name="role">
-        <a-select v-model:value="formState.role" placeholder="请选择角色">
-          <a-select-option value="admin">管理员</a-select-option>
-          <a-select-option value="editor">编辑员</a-select-option>
-          <a-select-option value="guest">游客</a-select-option>
-        </a-select>
+        <RoleSelector v-model:value="formState.role" />
       </a-form-item>
       <a-form-item ref="description" label="描述" name="description">
         <a-textarea v-model:value="formState.description" />
@@ -36,6 +32,8 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref, toRaw, toRefs, watch } from "vue";
+import RoleSelector from "../RoleSelector/index.vue";
+
 import { v4 as uuidv4 } from "uuid";
 import type { UserInfo } from "@/apis/dao/user";
 
@@ -124,6 +122,9 @@ export default defineComponent({
       ...toRefs(props),
       handleOk,
     };
+  },
+  components: {
+    RoleSelector,
   },
 });
 </script>

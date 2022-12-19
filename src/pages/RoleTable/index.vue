@@ -16,13 +16,17 @@
       >
         <div>
           <a-input
-            v-if="editableData[record.id]"
+            v-if="editableData[record.id] && col !== 'role'"
             v-model:value="editableData[record.id][col]"
             style="margin: -5px 0"
             :disabled="col === 'id'"
           />
+          <RoleSelector
+            v-else-if="editableData[record.id] && col === 'role'"
+            v-model:value="editableData[record.id][col]"
+          />
           <template v-else>
-            {{ text }}
+            {{ col !== "role" ? text : RoleMapping[text] }}
           </template>
         </div>
       </template>
@@ -72,6 +76,7 @@ import type { UserInfo } from "@/apis/dao/user";
 import { useLoginStore } from "@/store/user";
 import { message } from "ant-design-vue";
 import RoleModal from "./components/RoleModal/index.vue";
+import RoleSelector, { RoleMapping } from "./components/RoleSelector/index.vue";
 
 type EditableDataType = Record<string, UserInfo>;
 
@@ -80,8 +85,8 @@ export default defineComponent({
     CheckOutlined,
     EditOutlined,
     RoleModal,
+    RoleSelector,
   },
-
   setup() {
     const columns = [
       {
@@ -90,6 +95,7 @@ export default defineComponent({
         slots: {
           customRender: "id",
         },
+        width: "25%",
       },
       {
         title: "用户名称",
@@ -97,6 +103,7 @@ export default defineComponent({
         slots: {
           customRender: "name",
         },
+        width: "20%",
       },
       {
         title: "用户角色",
@@ -203,6 +210,7 @@ export default defineComponent({
     });
 
     return {
+      RoleMapping,
       columns,
       dataSource,
       editableData,
