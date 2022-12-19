@@ -9,39 +9,71 @@
       :columns="columns"
       :loading="loading"
     >
+      <template
+        v-for="col in ['id', 'name', 'role', 'description']"
+        #[col]="{ text, record }"
+        :key="col"
+      >
+        <div>
+          <a-input
+            v-if="editableData[record.id]"
+            v-model:value="editableData[record.id][col]"
+            style="margin: -5px 0"
+            :disabled="col === 'id'"
+          />
+          <template v-else>
+            {{ text }}
+          </template>
+        </div>
+      </template>
       <template #operation="{ record }">
-        <a
-          @click="onEdit(record.id)"
-          style="display: inline-block; margin-right: 10px"
-          >编辑</a
-        >
-        <a-popconfirm
-          v-if="dataSource.length"
-          title="Sure to delete?"
-          @confirm="onDelete(record.id)"
-        >
-          <a>删除</a>
-        </a-popconfirm>
+        <template v-if="editableData[record.id]">
+          <a
+            @click="onSave(record)"
+            style="display: inline-block; margin-right: 10px"
+            >保存</a
+          >
+          <a
+            @click="onCancel(record.id)"
+            style="display: inline-block; margin-right: 10px"
+            >取消</a
+          >
+        </template>
+        <template v-else>
+          <a
+            @click="onEdit(record.id)"
+            style="display: inline-block; margin-right: 10px"
+            >编辑</a
+          >
+          <a-popconfirm
+            v-if="dataSource.length"
+            title="Sure to delete?"
+            @confirm="onDelete(record.id)"
+          >
+            <a>删除</a>
+          </a-popconfirm>
+        </template>
       </template>
     </a-table>
   </div>
   <role-modal
     :visible="visible"
-    :modalTitle="modalTitle"
+    :modalTitle="'添加用户'"
     :handleCancel="closeModal"
-    :editableData="editableData"
     @saveRole="onSave"
   ></role-modal>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, reactive, ref, toRaw } from "vue";
 import { CheckOutlined, EditOutlined } from "@ant-design/icons-vue";
 import { cloneDeep } from "lodash-es";
 import type { UserInfo } from "@/apis/dao/user";
 import { useLoginStore } from "@/store/user";
 import { message } from "ant-design-vue";
 import RoleModal from "./components/RoleModal/index.vue";
+
+type EditableDataType = Record<string, UserInfo>;
 
 export default defineComponent({
   components: {
@@ -55,19 +87,31 @@ export default defineComponent({
       {
         title: "用户编码",
         dataIndex: "id",
+        slots: {
+          customRender: "id",
+        },
       },
       {
         title: "用户名称",
         dataIndex: "name",
+        slots: {
+          customRender: "name",
+        },
       },
       {
         title: "用户角色",
         dataIndex: "role",
+        slots: {
+          customRender: "role",
+        },
       },
       {
         title: "描述",
         dataIndex: "description",
         width: "30%",
+        slots: {
+          customRender: "description",
+        },
       },
       {
         title: "操作",
@@ -75,24 +119,22 @@ export default defineComponent({
         slots: {
           customRender: "operation",
         },
+        width: "10%",
       },
     ];
     const store = useLoginStore();
     const dataSource = ref<UserInfo[]>([]);
-    const editableData = ref<UserInfo | null>(null);
+    const editableData = reactive<EditableDataType>({});
     const loading = ref(false);
     const visible = ref(false);
-    const modalTitle = ref("添加用户");
 
     const onAdd = () => {
-      modalTitle.value = "添加用户";
       showModal();
     };
 
+    // 编辑模式
     const onEdit = (id: string) => {
-      modalTitle.value = "编辑用户";
-      showModal();
-      editableData.value = cloneDeep(
+      editableData[id] = cloneDeep(
         dataSource.value.filter((item) => id === item.id)[0]
       );
     };
@@ -103,10 +145,12 @@ export default defineComponent({
       try {
         loading.value = true;
         // 编辑
-        if (editableData.value) {
-          await store.editUser(user);
+        if (editableData[user.id]) {
+          const newUser = toRaw(editableData[user.id]);
+          await store.editUser(newUser);
           if (editUser) {
-            Object.assign(editUser, user);
+            Object.assign(editUser, newUser);
+            delete editableData[user.id];
           }
         } else {
           // 添加
@@ -120,6 +164,11 @@ export default defineComponent({
       } finally {
         loading.value = false;
       }
+    };
+
+    // 取消
+    const onCancel = (id: string) => {
+      delete editableData[id];
     };
 
     // 删除
@@ -137,7 +186,6 @@ export default defineComponent({
     };
 
     const closeModal = () => {
-      editableData.value = null;
       visible.value = false;
     };
 
@@ -158,10 +206,10 @@ export default defineComponent({
       columns,
       dataSource,
       editableData,
-      modalTitle,
       visible,
       loading,
       onDelete,
+      onCancel,
       onAdd,
       onEdit,
       onSave,
