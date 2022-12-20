@@ -21,7 +21,6 @@ import {
 import * as echarts from "echarts";
 import type { EChartsType } from "echarts";
 import bus, { RESIZE_CHART } from "@/utils/bus";
-import { throttle } from "lodash-es";
 
 export default defineComponent({
   props: {

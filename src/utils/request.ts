@@ -1,9 +1,4 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
-
-interface Response {
-  code: number;
-  message: string;
-}
+import axios from "axios";
 
 axios.create({
   timeout: 5000,

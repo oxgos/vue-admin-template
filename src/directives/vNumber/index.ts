@@ -3,7 +3,7 @@ import type { DirectiveBinding } from "vue";
 
 export const vNumber = (el: HTMLElement, binding: DirectiveBinding<number>) => {
   const { value } = binding;
-  var battery = {
+  const battery = {
     value: "0",
   };
 

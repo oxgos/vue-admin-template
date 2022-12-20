@@ -61,7 +61,7 @@
     </a-table>
   </div>
   <role-modal
-    :visible="visible"
+    v-model:visible="visible"
     :modalTitle="'添加用户'"
     :handleCancel="closeModal"
     @saveRole="onSave"
@@ -70,7 +70,6 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, reactive, ref, toRaw } from "vue";
-import { CheckOutlined, EditOutlined } from "@ant-design/icons-vue";
 import { cloneDeep } from "lodash-es";
 import type { UserInfo } from "@/apis/dao/user";
 import { useLoginStore } from "@/store/user";
@@ -82,8 +81,6 @@ type EditableDataType = Record<string, UserInfo>;
 
 export default defineComponent({
   components: {
-    CheckOutlined,
-    EditOutlined,
     RoleModal,
     RoleSelector,
   },

@@ -89,7 +89,7 @@ const router = createRouter({
   ],
 });
 
-router.beforeEach((to, from) => {
+router.beforeEach((to, _from) => {
   const userstore = useLoginStore();
   const menusstore = useMenusStore();
   if (

@@ -1,6 +1,7 @@
 <template>
   <a-modal
-    v-model:visible="visible"
+    :visible="visible"
+    @update:visibe="handleModalVisble"
     :title="modalTitle"
     okText="确定"
     cancelText="取消"
@@ -46,7 +47,7 @@ interface RoleModalProps {
 
 export default defineComponent({
   props: ["visible", "modalTitle", "editableData", "handleCancel"],
-  emits: ["saveRole", "deleteRole"],
+  emits: ["saveRole", "deleteRole", "update:visible"],
   setup(props: RoleModalProps, ctx) {
     const formRef = ref();
     const formState = reactive({
@@ -78,6 +79,10 @@ export default defineComponent({
       ],
     };
 
+    const handleModalVisble = (flag: boolean) => {
+      ctx.emit("update:visible", flag);
+    };
+
     const resetForm = () => {
       formState.id = uuidv4();
       formState.name = "";
@@ -85,7 +90,7 @@ export default defineComponent({
       formState.description = "";
     };
 
-    const handleOk = (e: PointerEvent) => {
+    const handleOk = (_: PointerEvent) => {
       formRef.value
         .validate()
         .then(() => {
@@ -121,6 +126,7 @@ export default defineComponent({
       rules,
       ...toRefs(props),
       handleOk,
+      handleModalVisble,
     };
   },
   components: {

@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, PropType, ref, toRefs } from "vue";
 import Typing, { TypingOpts } from "@/utils/typing";
 
 interface TypingCardProps {
@@ -15,8 +15,17 @@ interface TypingCardProps {
 }
 
 export default defineComponent({
-  props: ["title", "source"],
-  setup(props: TypingCardProps) {
+  props: {
+    title: {
+      type: String as PropType<TypingCardProps["title"]>,
+      default: "",
+    },
+    source: {
+      type: String as PropType<string>,
+      default: null,
+    },
+  },
+  setup(props) {
     const sourceNode = ref<Node>();
     const outputNode = ref<Node>();
 
@@ -29,8 +38,7 @@ export default defineComponent({
       typing.start();
     });
     return {
-      source: props.source,
-      title: props.title,
+      ...toRefs(props),
       sourceNode,
       outputNode,
     };

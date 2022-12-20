@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, toRaw } from "vue";
+import { defineComponent } from "vue";
 import { RouterView } from "vue-router";
 import Menus from "./components/Menus/index.vue";
 import VHeader from "./components/Header/index.vue";
@@ -21,6 +21,7 @@ export default defineComponent({
   components: {
     Menus,
     VHeader,
+    RouterView,
   },
 });
 </script>
